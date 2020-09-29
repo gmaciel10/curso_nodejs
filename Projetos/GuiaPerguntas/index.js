@@ -1,18 +1,24 @@
 const express = require('express');
 const app = express();
 
-app.get ('/', function(req,res){
-  res.render('index.ejs')
+app.get('*/:nome/:linguagem', function (req, res) {
+    var nome = req.params.nome;
+    var linguagem = req.params.linguagem;
+    res.render('index.ejs',{
+        nome:nome,
+        linguagem: linguagem,
+        empresa: 'GuiaDoProgramador',
+        inscritos: 8000
+    });
 })
 
 // Estou dizendo para o express utilizar o ejs como motor.
 app.set('view engine', 'ejs');
 
-app.listen(8081, function(erro){
-    if (erro){
+app.listen(8081, function (erro) {
+    if (erro) {
         console.log('existe um erro');
-    }
-    else{
+    } else {
         console.log('Rodando perfeitamente!');
     }
 })
