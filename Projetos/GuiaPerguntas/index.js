@@ -1,12 +1,10 @@
 const express = require('express');
 const app = express();
 
-app.get('*/:nome/:linguagem', function (req, res) {
-    var nome = req.params.nome;
-    var linguagem = req.params.linguagem;
+app.get('*/nome', function (req, res) { 
     res.render('index.ejs',{
-        nome:nome,
-        linguagem: linguagem,
+        nome:'Guilherme',
+        linguagem: 'Java',
         empresa: 'GuiaDoProgramador',
         inscritos: 8000
     });
