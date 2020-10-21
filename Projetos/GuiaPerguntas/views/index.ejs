@@ -1,15 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guia perguntas</title>
 </head>
+
 <body>
     <h1>Guia perguntas</h1>
     <hr>
-    <%=nome%>
-    <%=linguagem%>
-    <%=empresa%>
+    <h3>Lista de perguntas</h3>
+    <p>Nome:<%=nome%></p>
+    <p>Linguagem favorita:<%=lang%></p>
+    <p>Empresa:<%=empresa%></p>
+    <p>Escritos no canal:<%=inscritos%></p>
+
+    <% if(msg == false){%>
+    <h3>Isso é um erro</h3>
+    <%} else{%>
+    <h3>Nenhum erro!</h3>
+    <%}%>
+
+    <% produtos.forEach(function (produto) {%>
+        <hr>
+        <h3><%= produto.nome %></h3> 
+        <h4>R$<%= produto.preco %></h4>
+    <%}) %>
 </body>
+
 </html>
