@@ -1,27 +1,27 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 
-app.set('view engine','ejs')
 
-app.get("/:nome/:lang" ,function(req,res){
-    var nome = req.params.nome;
-    var lang = req.params.lang;
-    var exibirMsg = true;
-    var produtos = [
-        {nome:"coca-cola",preco:5},
-        {nome:"leite",preco:1.45},
-        {nome:"doritos",preco:3.14},
-        {nome:"carne",preco:15},
-        {nome:"redbul",preco:5}
-    ]
-    res.render("index",{
-        nome: nome,
-        lang: lang,
-        empresa: "Alcans",
-        inscritos: 8040,
-        msg: exibirMsg,
-        produtos:produtos
-    });
+app.set('view engine','ejs');
+app.use(express.static('public'));
+
+//bodyParser
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+
+app.get("/" ,function(req,res){
+    res.render("index");
 });
 
-app.listen(8082,()=> {console.log('App rodando');});
+app.get('/perguntar', function(req,res){
+    res.render('perguntar');
+});
+
+app.post('/salvarpergunta',(req,res) =>{
+    var titulo = req.body.titulo;
+    var descricao = req.body.descricao;
+    res.send('formulário recebido '+ titulo + descricao);
+});
+
+app.listen(8080,()=> {console.log('App rodando');});
