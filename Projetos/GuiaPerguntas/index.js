@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const connection = require('./database/database');
+const Pergunta = require('./database/Pergunta');
 
 //database conection
 
@@ -23,8 +24,13 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-app.get("/", function (req, res) {
-    res.render("index");
+app.get('/',(req,res)=>{
+    Pergunta.findAll({raw:true}).then(perguntas =>{
+        res.render("index",{
+            perguntas:perguntas
+        });
+    });
+    
 });
 
 app.get('/perguntar', function (req, res) {
@@ -34,7 +40,14 @@ app.get('/perguntar', function (req, res) {
 app.post('/salvarpergunta', (req, res) => {
     var titulo = req.body.titulo;
     var descricao = req.body.descricao;
-    res.send('formulário recebido ' + titulo + descricao);
+    Pergunta.create({
+        titulo: titulo,
+        descricao: descricao
+    }).then(()=>{
+        res.redirect('/');
+    });
+
+
 });
 
 app.listen(8080, () => {
