@@ -15,7 +15,7 @@ connection
         console.log(msgErro);
     })
 
-app.set('view engine', 'ejs');
+app.set('view engine','ejs');
 app.use(express.static('public'));
 
 //bodyParser
