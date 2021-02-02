@@ -1,28 +1,39 @@
-const express = require('express');
-const app = express();
-const bodyParser = require('body-parser');
-const connection = require('./database/database.js');
+const express = require('express')
+const app = express()
+const bodyParser = require('body-parser')
 
-connection
+//Controller
+const categoriesController = require('./categories/categoriesController')
+const articlesController = require('./articles/articleController')
+
+//Models
+const Category = require('./categories/Category')
+const Article = require('./articles/Article')
+
+const Connection = require('./database/Database')
+
+app.set('view engine', 'ejs')
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json())
+
+app.use(express.static('public'))
+
+Connection
     .authenticate()
-    .then(()=>{
-        console.log('conectado no banco');
+    .then(() => {
+        console.log('Conexão com o banco de dados estabelecida')
     })
-    .catch((msgErro) =>{
-        console.Console(msgErro);
+    .catch((error) => {
+        console.log(error)
     })
 
-app.set('view engine','ejs');
-app.use(express.static('public'));
-app.use(bodyParser.urlencoded({
-    extended:false
-}));
-app.use(bodyParser.json());
+app.get('/', (req, res) => {
+    res.render('index.ejs')
+})
 
-app.get('/',(req,res)=>{
-    res.render('index');
-});
+app.use('/',categoriesController)
 
-app.listen(8083,()=>{
-    console.log('rodando');
-});
+app.listen('9090', () => {
+    console.log('Porta do sistema estabelecida')
+})
