@@ -68,7 +68,7 @@ app.get('/:slug', (req, res) => {
 })
 
 app.get('/category/:slug', (req, res) => {
-    var slug = req.params;slug
+    var slug = req.params.slug
 
     Category.findOne({
         where: {
@@ -90,7 +90,7 @@ app.get('/category/:slug', (req, res) => {
         }
     })
         .catch(err => {
-            console.log(err)
+            res.redirect('/')
         })
 })
 
