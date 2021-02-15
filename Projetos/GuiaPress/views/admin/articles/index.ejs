@@ -1,0 +1,63 @@
+<%- include('../../partials/header.ejs')%>
+
+    <body>
+        <%- include ('../../partials/navbar.ejs')%>
+            <div class="container">
+                <hr>
+                <h1>Artigos</h1>
+                <br>
+                <a href="/admin/articles/new" class="btn btn-success">Criar nova artigo</a>
+                <hr>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Título</th>
+                            <th scope="col">Slug</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <% articles.forEach(article=>{%>
+
+
+                            <tr>
+                                <th scope="row" class="align-middle">
+                                    <%= article.id%>
+                                </th>
+                                <td class="align-middle">
+                                    <%= article.title%>
+                                </td>
+                                <td class="align-middle">
+                                    <%= article.slug%>
+                                </td>
+                                <td class="align-middle">
+                                    <%= article.category.title%>
+                                </td>
+                                <td class="align-middle">
+                                    <a href="/admin/articles/edit/" class="btn btn-warning">Alterar</a>
+                                    <form onsubmit="confirmarDelecao(event, this)" action="/articles/delete"
+                                        method="POST" style="display:inline">
+                                        <input type="hidden" name="id" value="<%= article.id %>">
+                                        <button type="submit" class="btn btn-danger" name="delete">Deletar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <%})%>
+                    </tbody>
+                </table>
+            </div>
+    </body>
+    <%- include('../../partials/footer.ejs')%>
+
+        <script>
+            function confirmarDelecao(event, form) {
+                event.preventDefault()
+                var decision = confirm('Realmente deseja deletar esse artigo?')
+                if (decision) {
+                    form.submit()
+                }
+            }
+        </script>
