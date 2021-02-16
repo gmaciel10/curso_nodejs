@@ -60,4 +60,95 @@ router.post('/articles/delete', (req, res) => {
         res.redirect('/admin/articles')
     }
 })
+
+router.get('/admin/articles/edit/:slug', (req, res) => {
+    var slug = req.params.slug
+
+    Article.findOne({
+        where: { slug: slug }
+    })
+        .then(article => {
+            if (article != undefined) {
+                Category.findAll()
+                    .then(categories => {
+                        res.render('admin/articles/edit', {
+                            article: article,
+                            categories: categories
+                        })
+                    })
+            }
+            else {
+
+            }
+        })
+        .catch(err => {
+            console.log(err)
+        })
+})
+
+router.post('/articles/update', (req, res) => {
+    var title = req.body.title
+    var body = req.body.body
+    var category = req.body.category
+    var id = req.body.id
+
+    if ((title != undefined) && (title != "")) {
+        Article.findAll({
+            where: { title: title }
+        }).then(checkduplicate => {
+            if (checkduplicate == false) {
+                Article.update({
+                    title: title,
+                    body: body,
+                    categoryId: category,
+                    slug: slugify(title)
+                }, {
+                    where: { id: id }
+                }).then(() => {
+                    res.redirect('/')
+                })
+            }
+            else {
+                res.redirect('admin/articles')
+            }
+        })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+})
+
+router.get('/articles/page/:num', (req, res) => {
+    var page = req.body.num
+    var offset = 0
+
+    if (isNaN(page) || offset == 1) {
+        offset = 0
+    }
+    else {
+        offset = parseInt(page) * 4
+    }
+
+
+    Article.findAndCountAll({
+        limit: 4,
+        offset: 0
+    })
+        .then(articles => {
+            var next = 0
+
+            if (offset + 4 >= articles.count) {
+                next = false
+            }
+            else {
+                next = true
+            }
+
+            var result = {
+                next: next,
+                articles: articles
+            }
+            res.json(result)
+        })
+})
 module.exports = router
