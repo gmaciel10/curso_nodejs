@@ -92,11 +92,9 @@ router.post('/articles/update', (req, res) => {
     var category = req.body.category
     var id = req.body.id
 
+    
+
     if ((title != undefined) && (title != "")) {
-        Article.findAll({
-            where: { title: title }
-        }).then(checkduplicate => {
-            if (checkduplicate == false) {
                 Article.update({
                     title: title,
                     body: body,
@@ -105,13 +103,8 @@ router.post('/articles/update', (req, res) => {
                 }, {
                     where: { id: id }
                 }).then(() => {
-                    res.redirect('/')
+                    res.redirect('/admin/articles')
                 })
-            }
-            else {
-                res.redirect('admin/articles')
-            }
-        })
             .catch(err => {
                 console.log(err)
             })
@@ -119,7 +112,7 @@ router.post('/articles/update', (req, res) => {
 })
 
 router.get('/articles/page/:num', (req, res) => {
-    var page = req.body.num
+    var page = req.params.num
     var offset = 0
 
     if (isNaN(page) || offset == 1) {
@@ -132,7 +125,7 @@ router.get('/articles/page/:num', (req, res) => {
 
     Article.findAndCountAll({
         limit: 4,
-        offset: 0
+        offset: offset
     })
         .then(articles => {
             var next = 0
@@ -148,7 +141,15 @@ router.get('/articles/page/:num', (req, res) => {
                 next: next,
                 articles: articles
             }
-            res.json(result)
+
+            Category.findAll()
+                .then(categories => {
+                    res.render('/admin/articles/page', {
+                        categories: categories,
+                        result: result
+                })
+            })
+            
         })
 })
 module.exports = router
